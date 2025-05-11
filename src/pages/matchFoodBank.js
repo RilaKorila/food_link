@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Header from "@/components/Header"
+import BottomNavigation from "@/components/BottomNavigation"
 
 export default function MatchFoodBank() {
   const [imageSrc, setImageSrc] = useState(null)
@@ -22,6 +23,8 @@ export default function MatchFoodBank() {
           <img src={imageSrc} alt="captured" className="border rounded" />
         </div>
       )}
+
+      <BottomNavigation activeTab="map" setActiveTab={() => {}} />
     </div>
   )
 }
