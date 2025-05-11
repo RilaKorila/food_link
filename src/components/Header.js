@@ -10,8 +10,8 @@ return (
         <h1 className="text-xl font-medium">Food Link</h1>
         <div className="w-8 h-8 rounded-full overflow-hidden">
             <Image
-                src="/placeholder.svg?height=32&width=32"
-                alt="Profile"
+                src="/sampleProfile.png"
+                alt="ProfileImg"
                 width={32}
                 height={32}
                 className="object-cover"
