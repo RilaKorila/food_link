@@ -6,6 +6,7 @@ import BottomNavigation from "@/components/BottomNavigation"
 export default function Page() {
   const [activeTab, setActiveTab] = useState("home")
   const [photo, setPhoto] = useState(null)
+  const [foodsInPhoto, setFoodsInPhoto] = useState([])
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const router = useRouter()
@@ -31,8 +32,35 @@ export default function Page() {
         ctx.drawImage(videoRef.current, 0, 0, 300, 225)
         const imageData = canvasRef.current.toDataURL("image/png")
         setPhoto(imageData)
+
+        // 保存と同時に食材検出＆反映
+        sessionStorage.setItem("capturedPhoto", imageData)
+        const detected = detectFoodsFromPhoto(imageData)
+        setFoodsInPhoto(detected)
+        sessionStorage.setItem("detectedFoods", JSON.stringify(detected))
       }
     }
+  }
+
+  const detectFoodsFromPhoto = (photo) => {
+    // TODO: 実際の画像解析ロジックをここに実装
+
+    // 仮データ
+    return ["ツナ缶", "そうめん", "パスタ"]
+  }
+
+  const getRecommendedFoodBanks = () => {
+    // TODO: 実際のAPI呼び出しに置き換え
+
+    return [
+      {
+        name: "フードバンクネット西埼玉",
+        pref: "埼玉県",
+        city: "所沢市",
+        target: "団体・個人の生活困窮者",
+        url: "https://fbnws.org/",
+      },
+    ]
   }
 
   const searchDonation = () => {
@@ -40,19 +68,19 @@ export default function Page() {
       alert("画像がまだありません")
       return
     }
-  
-    // 画像をURLエンコードしてsessionStorageに保存
-    sessionStorage.setItem("capturedPhoto", photo)
 
-    // ページ遷移
+    const recommendedFoodBanks = getRecommendedFoodBanks()
+    sessionStorage.setItem("recommendedFoodBanks", JSON.stringify(recommendedFoodBanks))
+
     router.push("/matchFoodBank")
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-white pb-20">
+    <div className="flex flex-col h-screen">
       <Header />
 
-      <main className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      {/* メイン領域 (スクロール可能) */}
+      <main className="flex-1 overflow-y-auto px-4 py-6 bg-white">
         <h2 className="text-lg font-semibold">📷 カメラで写真を撮る</h2>
 
         <div className="space-y-4">
@@ -67,8 +95,15 @@ export default function Page() {
 
           {photo && (
             <div>
-              <p className="mt-4">📸 撮影された写真:</p>
+              <h2 className="text-lg font-semibold mt-6">📸 撮影された写真:</h2>
               <img src={photo} alt="captured" className="mt-2 border rounded" />
+
+              <h2 className="text-lg font-semibold mt-6">📦 画像にうつっている食材</h2>
+              {foodsInPhoto.map((food, index) => (
+                <div key={index} className="flex items-center mb-2">
+                  <span className="text-lg font-semibold">{food}</span>
+                </div>
+              ))}
 
               <button
                 onClick={searchDonation}
