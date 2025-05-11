@@ -25,7 +25,7 @@ export default function Page() {
     }
   }, [])
 
-  const takePhoto = () => {
+  const takePhoto = async () => {
     if (canvasRef.current && videoRef.current) {
       const ctx = canvasRef.current.getContext("2d")
       if (ctx) {
@@ -35,16 +35,25 @@ export default function Page() {
 
         // 保存と同時に食材検出＆反映
         sessionStorage.setItem("capturedPhoto", imageData)
-        const detected = detectFoodsFromPhoto(imageData)
+        //const detected = detectFoodsFromPhoto(imageData)
+        const detected = await detectFoodsFromPhoto(imageData)
         setFoodsInPhoto(detected)
         sessionStorage.setItem("detectedFoods", JSON.stringify(detected))
       }
     }
   }
 
-  const detectFoodsFromPhoto = (photo) => {
+  const detectFoodsFromPhoto = async (photo) => {
     // TODO: 実際の画像解析ロジックをここに実装
-
+    const response = await fetch("/api/detectFoods", {
+      method: "POST",
+      body: JSON.stringify({ image: photo }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const data = await response.json()
+    return data.foods
     // 仮データ
     return ["ツナ缶", "そうめん", "パスタ"]
   }
