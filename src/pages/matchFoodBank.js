@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import Header from "@/components/Header"
 
 export default function MatchFoodBank() {
   const [imageSrc, setImageSrc] = useState(null)
@@ -12,6 +13,7 @@ export default function MatchFoodBank() {
 
   return (
     <div className="min-h-screen p-6 bg-white">
+      <Header />
       <h1 className="text-xl font-bold mb-4">📦 寄付先候補を探す</h1>
 
       {imageSrc && (
