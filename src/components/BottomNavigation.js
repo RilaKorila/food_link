@@ -7,7 +7,7 @@ export default function BottomNavigation({ activeTab, setActiveTab }) {
   const iconSize = 24 // 画像サイズ
 
   return (
-    <footer className="fixed bottom-0 left-0 w-full z-50 bg-white shadow-md">
+    <footer className="w-full h-16 bg-white shadow-md">
       <div className="flex justify-around items-center h-16">
         <button
           onClick={() => setActiveTab("home")}
