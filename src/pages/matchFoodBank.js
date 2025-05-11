@@ -22,14 +22,6 @@ export default function MatchFoodBank() {
           <img src={imageSrc} alt="captured" className="border rounded" />
         </div>
       )}
-
-      <div className="pt-6">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="p-4 bg-gray-100 rounded mb-2">
-            Box {i + 1}
-          </div>
-        ))}
-      </div>
     </div>
   )
 }
