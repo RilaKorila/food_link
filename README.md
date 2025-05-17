@@ -28,3 +28,13 @@ This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-appl
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+## 必要な設定
+
+1. .envファイルを追加
+2. Gemini API 公式docsを参考にAPIキーを取得
+3. .envファイル以下のように編集
+
+``
+NEXT_PUBLIC_GEMINI_API_KEY=<取得した自分のAPIキー>
+```
