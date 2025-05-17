@@ -1,16 +1,16 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai"
 
 
 export default async function handler(req, res) {
     if (req.method !== "POST") {
-      res.status(405).json({ error: "Method Not Allowed" });
-      return;
+      res.status(405).json({ error: "Method Not Allowed" })
+      return
     }
-    const { prefecture, city, donationTarget } = req.body;
+    const { prefecture, city, donationTarget } = req.body
 
 
 
-    const genAIClient = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
+    const genAIClient = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY })
 
     const prompt = `
       あなたはフードバンクの専門家です。
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
           "url": "公式サイトURL"
         }
       ]
-      `;
+      `
 
       try {
 
@@ -65,9 +65,7 @@ export default async function handler(req, res) {
     //       },
     //     },
     //   },
-    // });
-
-    // console.log(result.candidates[0]?.content.parts[0]?.text)
+    // })
 
     
     const dummyResponse = `[
@@ -87,16 +85,16 @@ export default async function handler(req, res) {
       }
     ]`
 
-    // const responseText = result.candidates[0]?.content.parts[0]?.text;
+    // const responseText = result.candidates[0]?.content.parts[0]?.text
     const responseText = dummyResponse
 
-    const foodBanks = JSON.parse(responseText);
+    const foodBanks = JSON.parse(responseText)
 
-    res.status(200).json(foodBanks);
+    res.status(200).json(foodBanks)
 
     } catch (error) {
-    console.error("Gemini API Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Gemini API Error:", error)
+    res.status(500).json({ error: "Internal Server Error" })
     }   
 }
 

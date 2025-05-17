@@ -15,7 +15,7 @@ export default function FoodBankFinderPage() {
   const [isPhotoTaken, setIsPhotoTaken] = useState(false)
 
 
-  const donationTargets = ["災害支援", "子ども支援", "医療支援", "環境保護", "教育支援", "動物保護"]
+  const donationTargets = ["災害支援", "子ども支援", "医療支援", "教育支援", "高齢者支援"]
 
   useEffect(() => {
     if (videoRef.current) {
