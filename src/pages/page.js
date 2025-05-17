@@ -82,8 +82,8 @@ export default function FoodBankFinderPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prefecture: prefecture,
-        city,
-        donationTarget,
+        city: city,
+        donationTarget: donationTarget,
       }),
     })
     const foodBanks = await response.json()
