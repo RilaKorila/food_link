@@ -1,76 +1,76 @@
-import { useEffect, useState } from "react";
-import Header from "@/components/Header";
-import BottomNavigation from "@/components/BottomNavigation";
+import { useEffect, useState } from "react"
+import Header from "@/components/Header"
+import BottomNavigation from "@/components/BottomNavigation"
+import Link from "next/link"
 
 export default function MatchFoodBank() {
-  const [imageSrc, setImageSrc] = useState(null);
-  const [detectedFoods, setDetectedFoods] = useState([]);
-  const [foodBanks, setFoodBanks] = useState([]);
+  const [detectedFoods, setDetectedFoods] = useState([])
+  const [foodBanks, setFoodBanks] = useState([])
 
   useEffect(() => {
-    const savedPhoto = sessionStorage.getItem("capturedPhoto");
-    const detectedFoods = sessionStorage.getItem("detectedFoods"); 
-    const recommendedFoodBanks = sessionStorage.getItem("recommendedFoodBanks");
+    const detectedFoods = sessionStorage.getItem("detectedFoods") 
+    const recommendedFoodBanks = sessionStorage.getItem("recommendedFoodBanks")
 
-    if (savedPhoto) setImageSrc(savedPhoto);
-    if (detectedFoods) setDetectedFoods(JSON.parse(detectedFoods));
-    if (recommendedFoodBanks) setFoodBanks(JSON.parse(recommendedFoodBanks));
-  }, []);
+    if (detectedFoods) setDetectedFoods(JSON.parse(detectedFoods))
+    if (recommendedFoodBanks) setFoodBanks(JSON.parse(recommendedFoodBanks))
+  }, [])
 
   return (
     <div className="flex flex-col h-screen">
       <Header />
 
-      {/* メイン領域 (スクロール可能) */}
-      <main className="flex-1 overflow-y-auto px-4 py-6 bg-white">
-        <h1 className="text-xl font-bold mb-4">📦 寄付先候補を探す</h1>
+      <main className="flex-1 overflow-y-auto px-4 py-6 bg-white space-y-6">
+        <h1 className="text-2xl font-bold">マッチング結果</h1>
+        <p className="text-gray-600">あなたの寄付に最適なフードバンク</p>
 
-        {imageSrc && (
-          <div className="mb-6">
-            <p className="mb-2">📸 撮影された画像:</p>
-            <img src={imageSrc} alt="captured" className="border rounded" />
+        <div className="border border-orange-400 rounded p-4">
+          <div className="flex items-center mb-2">
+            <span className="font-semibold text-orange-500">認識結果</span>
           </div>
-        )}
-
-        {detectedFoods.length > 0 ? (
-          <div className="mb-6">
-            <p className="text-lg font-semibold mb-2">📦 画像にうつっている食材:</p>
+          <ul className="list-disc list-inside text-gray-700">
             {detectedFoods.map((food, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <span className="text-lg font-semibold">{food}</span>
-              </div>
+              <li key={index}>{food}</li>
             ))}
-          </div>
-        ) : (
-          <p className="text-lg font-semibold mb-6">食材が検出されませんでした。</p>
-        )}
+          </ul>
+        </div>
 
-        {foodBanks.length > 0 ? (
-          <div>
-            <h2 className="text-lg font-semibold mb-2">📦 おすすめの寄付先:</h2>
-            {foodBanks.map((foodBank, index) => (
-              <div key={index} className="flex flex-col mb-2">
-                <span className="text-lg font-semibold">{foodBank.name}</span>
-                <span className="text-sm text-gray-500">
-                  {foodBank.pref} {foodBank.city}
+        <div>
+          <h2 className="text-lg font-semibold mb-2">📦 おすすめの寄付先</h2>
+
+          {foodBanks.map((foodBank, index) => (
+            <div key={index} className="border rounded p-4 mb-4 space-y-2 shadow-sm">
+              {index === 0 && (
+                <span className="inline-block text-xs text-white bg-orange-500 rounded-full px-2 py-1">
+                  最適
                 </span>
-                <a
-                  href={foodBank.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline text-sm"
-                >
-                  詳細を見る
-                </a>
+              )}
+              <div className="flex items-center gap-2">
+                <div>
+                  <p className="font-semibold">{foodBank.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {foodBank.pref} {foodBank.city}
+                  </p>
+                </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-lg font-semibold">条件を満たすフードバンクはありませんでした。条件を変えてみてください🍙</p>
-        )}
+              <div>
+                <p className="text-sm text-gray-500">必要としている食品:</p>
+                <p className="text-sm text-gray-800">{foodBank.target || "お米、缶詰、乾麺"}</p>
+              </div>
+              <button
+                className={`w-full py-2 rounded font-semibold ${
+                  index === 0 ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                <Link className="flex items-center justify-center gap-2" href={foodBank.url} target="_blank">
+                  <span>フードバンクの詳細</span>
+                </Link>
+              </button>
+            </div>
+          ))}
+        </div>
       </main>
 
       <BottomNavigation activeTab="map" setActiveTab={() => {}} />
     </div>
-  );
+  )
 }
