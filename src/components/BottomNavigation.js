@@ -1,10 +1,15 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { Home, Camera, MapPin } from "lucide-react"
 
-export default function BottomNavigation({ activeTab, setActiveTab }) {
-
+export default function BottomNavigation({ activeTab }) {
+  const router = useRouter()
   const iconSize = 24 // 画像サイズ
+
+  const navigateTo = (path) => {
+    router.push(path)
+  }
 
   const getButtonClass = (tab) => {
     const isActive = activeTab === tab
@@ -23,22 +28,21 @@ export default function BottomNavigation({ activeTab, setActiveTab }) {
   return (
     <footer className="w-full h-16 bg-white shadow-md">
       <div className="flex justify-around items-center h-16">
-        <button
-          onClick={() => setActiveTab("home")}
+      <button
+          onClick={() => navigateTo("/")}
           className={getButtonClass("home")}
         >
           <Home size={iconSize} />
         </button>
 
         <button
-          onClick={() => setActiveTab("camera")}
+          onClick={() => navigateTo("/page")}
           className={getCameraButtonClass()}
         >
           <Camera size={iconSize} className="text-white" />
         </button>
 
         <button
-          onClick={() => setActiveTab("map")}
           className={getButtonClass("map")}
         >
           <MapPin size={iconSize} />

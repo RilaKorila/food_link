@@ -70,7 +70,7 @@ export default function MatchFoodBank() {
         </div>
       </main>
 
-      <BottomNavigation activeTab="map" setActiveTab={() => {}} />
+      <BottomNavigation activeTab="map" />
     </div>
   )
 }

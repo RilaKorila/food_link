@@ -4,7 +4,7 @@ import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
 
 export default function FoodBankFinderPage() {
-  const [activeTab, setActiveTab] = useState("home")
+  const [activeTab, setActiveTab] = useState("camera")
   const [location, setLocation] = useState("東京都新宿区")
   const [donationTarget, setDonationTarget] = useState("災害支援")
   const [photo, setPhoto] = useState(null)
@@ -168,7 +168,7 @@ export default function FoodBankFinderPage() {
         </div>
       </main>
 
-      <BottomNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      <BottomNavigation activeTab={activeTab} />
     </div>
   )
 }
