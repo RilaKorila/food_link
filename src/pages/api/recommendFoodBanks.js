@@ -65,12 +65,11 @@ export default async function handler(req, res) {
         
         const responseText = result.candidates[0]?.content.parts[0]?.text
         const foodBanks = JSON.parse(responseText)
-
         res.status(200).json(foodBanks)
 
     } catch (error) {
         console.error("Gemini API Error:", error)
-        res.status(500).json({ error: "Internal Server Error" })
+        res.status(500).json({ error: "フードバンクの検索中にエラーが発生しました" })
     }   
 }
 
