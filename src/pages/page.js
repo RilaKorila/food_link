@@ -49,24 +49,35 @@ export default function FoodBankFinderPage() {
         // 保存や食材認識処理（任意）
         sessionStorage.setItem("capturedPhoto", imageData)
         const detected = await detectFoodsFromPhoto(imageData)
-        setDetectedFoodItems(detected)
-        sessionStorage.setItem("detectedFoods", JSON.stringify(detected))
+        setDetectedFoodItems(detected["foods"])
+        sessionStorage.setItem("detectedFoods", JSON.stringify(detected["foods"]))
       }
     }
   }
 
   const detectFoodsFromPhoto = async (photo) => {
-    const response = await fetch("/api/detectFoods", {
-      method: "POST",
-      body: JSON.stringify({ image: photo }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    // const data = await response.json()
+    try {
+      const response = await fetch("/api/detectFoods", {
+        method: "POST",
+        body: JSON.stringify({ image: photo }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    // TODO: 実際のAPIデータを返す
-    return ["ツナ缶", "そうめん", "パスタ"] // 仮データ
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`APIリクエストに失敗しました: ${errorData.error || response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('食材認識エラー:', error);
+      // エラーメッセージをユーザーに表示
+      alert('食材の認識に失敗しました。もう一度お試しください。');
+      return []; // エラー時は空配列を返す
+    }
   }
 
   const handleSearchDonation = async () => {

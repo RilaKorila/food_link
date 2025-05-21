@@ -37,36 +37,42 @@ export default function MatchFoodBank() {
         <div>
           <h2 className="text-lg font-semibold mb-2">📦 おすすめの寄付先</h2>
 
-          {foodBanks.map((foodBank, index) => (
-            <div key={index} className="border rounded p-4 mb-4 space-y-2 shadow-sm">
-              {index === 0 && (
-                <span className="inline-block text-xs text-white bg-orange-500 rounded-full px-2 py-1">
-                  最適
-                </span>
-              )}
-              <div className="flex items-center gap-2">
-                <div>
-                  <p className="font-semibold">{foodBank.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {foodBank.pref} {foodBank.city}
-                  </p>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">必要としている食品:</p>
-                <p className="text-sm text-gray-800">{foodBank.target || "お米、缶詰、乾麺"}</p>
-              </div>
-              <button
-                className={`w-full py-2 rounded font-semibold ${
-                  index === 0 ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600"
-                }`}
-              >
-                <Link className="flex items-center justify-center gap-2" href={foodBank.url} target="_blank">
-                  <span>フードバンクの詳細</span>
-                </Link>
-              </button>
+          {foodBanks.length === 0 ? (
+            <div className="text-center py-8 text-gray-600">
+              寄付先が見つかりません。
             </div>
-          ))}
+          ) : (
+            foodBanks.map((foodBank, index) => (
+              <div key={index} className="border rounded p-4 mb-4 space-y-2 shadow-sm">
+                {index === 0 && (
+                  <span className="inline-block text-xs text-white bg-orange-500 rounded-full px-2 py-1">
+                    最適
+                  </span>
+                )}
+                <div className="flex items-center gap-2">
+                  <div>
+                    <p className="font-semibold">{foodBank.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {foodBank.pref} {foodBank.city}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">必要としている食品:</p>
+                  <p className="text-sm text-gray-800">{foodBank.target || "お米、缶詰、乾麺"}</p>
+                </div>
+                <button
+                  className={`w-full py-2 rounded font-semibold ${
+                    index === 0 ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  <Link className="flex items-center justify-center gap-2" href={foodBank.url} target="_blank">
+                    <span>フードバンクの詳細</span>
+                  </Link>
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </main>
 
