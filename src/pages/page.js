@@ -2,17 +2,17 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
+import ProcessingModal from '@/components/ProcessingModal';
 
 export default function FoodBankFinderPage() {
   const [activeTab, setActiveTab] = useState("camera")
   const [location, setLocation] = useState("東京都新宿区")
   const [donationTarget, setDonationTarget] = useState("災害支援")
-  const [photo, setPhoto] = useState(null)
-  const [detectedFoods, setDetectedFoodItems] = useState([])
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const router = useRouter()
-  const [isPhotoTaken, setIsPhotoTaken] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false);
+const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
 
 
   const donationTargets = ["災害支援", "子ども支援", "医療支援", "教育支援", "高齢者支援"]
@@ -37,8 +37,6 @@ export default function FoodBankFinderPage() {
       if (ctx) {
         ctx.drawImage(videoRef.current, 0, 0, 300, 225)
         const imageData = canvasRef.current.toDataURL("image/png")
-        setPhoto(imageData)
-        setIsPhotoTaken(true) // 撮影完了フラグを立てる
   
         // カメラ停止処理
         const stream = videoRef.current.srcObject
@@ -49,7 +47,6 @@ export default function FoodBankFinderPage() {
         // 保存や食材認識処理（任意）
         sessionStorage.setItem("capturedPhoto", imageData)
         const detected = await detectFoodsFromPhoto(imageData)
-        setDetectedFoodItems(detected["foods"])
         sessionStorage.setItem("detectedFoods", JSON.stringify(detected["foods"]))
       }
     }
@@ -80,12 +77,30 @@ export default function FoodBankFinderPage() {
     }
   }
 
-  const handleSearchDonation = async () => {
-    if (!photo) {
-      alert("写真を撮影してください")
-      return
-    }
+  const handleDonationProcess = async () => {
+    setIsProcessing(true)
+    setProgress(0)
 
+    console.log("写真撮影開始")
+  
+    // 撮影＆画像解析
+    const photo = await capturePhoto()
+    // 進捗を50%に
+    setProgress(50)
+
+    // レコメンド取得
+    await searchDonation(photo)
+    // 進捗を100% 
+    setProgress(100)
+  
+    setTimeout(() => {
+      setIsProcessing(false) // ダイアログ閉じる
+    }, 500)
+
+    return router.push("/matchFoodBank")
+  }
+
+  const searchDonation = async () => {
     const [prefecture, city] = location.split(/県|都|府|道/).filter(Boolean)
 
     const response = await fetch("/api/recommendFoodBanks", {
@@ -110,8 +125,6 @@ export default function FoodBankFinderPage() {
 
       {/* メイン領域 (スクロール可能) */}
       <main className="flex-1 overflow-y-auto px-4 py-6 bg-white space-y-6">
-        <h1 className="text-2xl font-bold">寄付する</h1>
-
         <div>
           <h2 className="font-semibold mb-2">現在地</h2>
           <input
@@ -141,42 +154,20 @@ export default function FoodBankFinderPage() {
 
         <div>
           <div className="w-full flex justify-center mt-4">
-            {!isPhotoTaken ? (
-              <>
-                <div className="flex flex-col items-center space-y-4">
-                  <video ref={videoRef} width={300} height={225} className="border rounded" />
-                  <canvas ref={canvasRef} width={300} height={225} className="hidden" />
+            <div className="flex flex-col items-center space-y-4">
+              <video ref={videoRef} width={300} height={225} className="border rounded" />
+              <canvas ref={canvasRef} width={300} height={225} className="hidden" />
 
-                  <button
-                    onClick={capturePhoto}
-                    className="px-4 py-2 bg-orange-500 text-white rounded shadow"
-                  >
-                    写真を撮る
-                  </button>
-                </div>
-              </>
-            ) : (
-                <div>
-                  <h2 className="text-lg font-semibold mt-6">📸 撮影された写真:</h2>
-                  <img src={photo} alt="captured" className="mt-2 border rounded" />
-    
-                  <h2 className="text-lg font-semibold mt-6">📦 画像に写っている食材</h2>
-                  {detectedFoods.map((food, index) => (
-                    <div key={index} className="flex items-center mb-2">
-                      <span className="text-lg font-semibold">{food}</span>
-                    </div>
-                  ))}
-    
-                  <button
-                   onClick={handleSearchDonation}
-                   className="mt-4 px-4 py-2 bg-orange-500 text-white rounded shadow"
-                  >
-                    寄付先を探す
-                  </button>
-                </div>
-            )}
+              <button
+                onClick={handleDonationProcess}
+                className="px-4 py-2 bg-orange-500 text-white rounded shadow"
+              >
+                写真を撮って寄付先を探す
+              </button>
+            </div>
           </div>
         </div>
+        <ProcessingModal visible={isProcessing} progress={progress} />
       </main>
 
       <BottomNavigation activeTab={activeTab} />
