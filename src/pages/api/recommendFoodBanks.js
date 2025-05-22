@@ -26,6 +26,9 @@ export default async function handler(req, res) {
           "pref": "県名",
           "city": "市町村名",
           "target": "受け入れ対象",
+          "necessaryFoods": [],  // 特に必要としている食品のリスト
+          "cautionList": [], // 寄付するにあたり注意事項がある場合のリスト
+          "donationMethod": "具体的な寄付方法の2-3行要約",
           "url": "公式サイトURL"
         }
       ]
@@ -54,11 +57,26 @@ export default async function handler(req, res) {
                 target: {
                     type: Type.STRING,
                 },
+                necessaryFoods: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING,
+                    },
+                },
+                cautionList: {
+                    type: Type.ARRAY,
+                    items: {
+                        type: Type.STRING,
+                    },
+                },
+                donationMethod: {
+                    type: Type.TEXT,
+                },
                 url: {
                     type: Type.STRING,
                 },
                 },
-                propertyOrdering: ["name", "pref", "city", "target", "url"],
+                propertyOrdering: ["name", "pref", "city", "target", "necessaryFoods", "cautionList", "donationMethod", "url"],
             },
             },
         },

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function MatchFoodBank() {
+    const router = useRouter()
   const [detectedFoods, setDetectedFoods] = useState([])
   const [foodBanks, setFoodBanks] = useState([])
 
@@ -65,10 +66,13 @@ export default function MatchFoodBank() {
                   className={`w-full py-2 rounded font-semibold ${
                     index === 0 ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-600"
                   }`}
+                  onClick={() => {
+                    console.log("Selected food bank:", foodBank)
+                    sessionStorage.setItem("selectedFoodBank", JSON.stringify(foodBank));
+                    router.push("/description");
+                  }}
                 >
-                  <Link className="flex items-center justify-center gap-2" href={foodBank.url} target="_blank">
-                    <span>フードバンクの詳細</span>
-                  </Link>
+                寄付方法を確認
                 </button>
               </div>
             ))

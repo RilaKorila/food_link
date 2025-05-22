@@ -15,7 +15,7 @@ export default function ProcessingModal({
               <span className="text-orange-600 text-xl">❤️</span>
             </div>
           </div>
-          <h2 className="text-lg font-bold">寄付を処理しています</h2>
+          <h2 className="text-lg font-bold">おすすめの寄付先を探しています</h2>
           <p className="text-sm text-gray-500">マッチングするフードバンクを検索中...</p>
   
           <div className="relative h-2 bg-gray-200 rounded-full">
