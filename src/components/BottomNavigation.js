@@ -18,13 +18,6 @@ export default function BottomNavigation({ activeTab }) {
     }`
   }
 
-  const getCameraButtonClass = () => {
-    const isActive = activeTab === "camera"
-    return `w-14 h-14 rounded-full flex items-center justify-center -mt-6 shadow-lg transition-colors duration-200 ${
-      isActive ? "bg-orange-400 text-black" : "bg-gray-200 text-gray-400"
-    }`
-  }
-
   return (
     <footer className="w-full h-16 bg-white shadow-md">
       <div className="flex justify-around items-center h-16">
@@ -37,9 +30,9 @@ export default function BottomNavigation({ activeTab }) {
 
         <button
           onClick={() => navigateTo("/page")}
-          className={getCameraButtonClass()}
+          className={getButtonClass("camera")}
         >
-          <Camera size={iconSize} className="text-white" />
+          <Camera size={iconSize} />
         </button>
 
         <button
