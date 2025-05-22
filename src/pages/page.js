@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import Header from "@/components/Header"
@@ -5,17 +7,17 @@ import BottomNavigation from "@/components/BottomNavigation"
 import ProcessingModal from '@/components/ProcessingModal';
 
 export default function FoodBankFinderPage() {
-  const [activeTab, setActiveTab] = useState("camera")
   const [location, setLocation] = useState("東京都新宿区")
-  const [donationTarget, setDonationTarget] = useState("災害支援")
+  const [donationTarget, setDonationTarget] = useState("子ども支援")
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false);
-const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
+  const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
+  const [errorAtDetection, setErrorAtDetection] = useState(false)
 
 
-  const donationTargets = ["災害支援", "子ども支援", "医療支援", "教育支援", "高齢者支援"]
+  const donationTargets = ["子ども支援", "災害支援", "医療支援", "教育支援", "高齢者支援"]
 
   useEffect(() => {
     if (videoRef.current) {
@@ -37,17 +39,19 @@ const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
       if (ctx) {
         ctx.drawImage(videoRef.current, 0, 0, 300, 225)
         const imageData = canvasRef.current.toDataURL("image/png")
-  
+
         // カメラ停止処理
         const stream = videoRef.current.srcObject
         if (stream) {
           stream.getTracks().forEach((track) => track.stop())
         }
   
-        // 保存や食材認識処理（任意）
-        sessionStorage.setItem("capturedPhoto", imageData)
-        const detected = await detectFoodsFromPhoto(imageData)
-        sessionStorage.setItem("detectedFoods", JSON.stringify(detected["foods"]))
+        const detectedItems = await detectFoodsFromPhoto(imageData)
+        const detectedFoods = detectedItems?.foods || []
+        setErrorAtDetection(detectedFoods.length === 0) // エラー発生フラグ
+  
+        sessionStorage.setItem("detectedFoods", JSON.stringify(detectedFoods))
+        return detectedFoods
       }
     }
   }
@@ -84,12 +88,18 @@ const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
     console.log("写真撮影開始")
   
     // 撮影＆画像解析
-    const photo = await capturePhoto()
+    const detectedFoods = await capturePhoto()
     // 進捗を50%に
     setProgress(50)
 
+    // もし食材が検出できなかった場合、エラー文言を表示して処理を終了
+    if (detectedFoods.length === 0) {
+      setErrorAtDetection(true)
+      return
+    }
+
     // レコメンド取得
-    await searchDonation(photo)
+    await searchDonation(detectedFoods)
     // 進捗を100% 
     setProgress(100)
   
@@ -100,7 +110,7 @@ const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
     return router.push("/matchFoodBank")
   }
 
-  const searchDonation = async () => {
+  const searchDonation = async (detectedFoods) => {
     const [prefecture, city] = location.split(/県|都|府|道/).filter(Boolean)
 
     const response = await fetch("/api/recommendFoodBanks", {
@@ -110,6 +120,7 @@ const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
         prefecture: prefecture,
         city: city,
         donationTarget: donationTarget,
+        detectedFoods: detectedFoods
       }),
     })
     const foodBanks = await response.json()
@@ -117,6 +128,11 @@ const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
     sessionStorage.setItem("recommendedFoodBanks", JSON.stringify(foodBanks))
 
     router.push("/matchFoodBank")
+  }
+
+  const handleOnRetry = () => {
+    setIsProcessing(false)
+    return router.reload()
   }
 
   return (
@@ -167,10 +183,11 @@ const [progress, setProgress] = useState(0); // 進捗表示 0 → 50 → 100
             </div>
           </div>
         </div>
-        <ProcessingModal visible={isProcessing} progress={progress} />
+        <ProcessingModal visible={isProcessing} progress={progress} errorAtDetection={errorAtDetection}
+        onRetry={handleOnRetry}/>
       </main>
 
-      <BottomNavigation activeTab={activeTab} />
+      <BottomNavigation activeTab={"camera"} />
     </div>
   )
 }

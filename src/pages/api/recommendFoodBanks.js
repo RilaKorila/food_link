@@ -6,7 +6,7 @@ export default async function handler(req, res) {
       res.status(405).json({ error: "Method Not Allowed" })
       return
     }
-    const { prefecture, city, donationTarget } = req.body
+    const { prefecture, city, donationTarge, detectedFoods } = req.body
     const genAIClient = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY })
 
     const prompt = `
@@ -17,6 +17,7 @@ export default async function handler(req, res) {
       - 県: ${prefecture}
       - 市: ${city}
       - 希望の寄付先: ${donationTarget}
+      - 寄付内容: ${detectedFoods.join(", ")}
 
       返答形式は以下のJSON形式にしてください。
       [
