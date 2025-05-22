@@ -1,11 +1,9 @@
-import { useState } from "react"
-import { Camera, MapPin, RotateCcw } from "lucide-react";
+import { Camera, RotateCcw } from "lucide-react";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
+import BadgeList from "@/components/BadgeList";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("home")
-  
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
@@ -34,14 +32,10 @@ export default function Home() {
         {/* User Stats */}
         <div className="rounded-xl p-4 shadow text-center">
           <h2 className="font-semibold text-gray-700 mb-4">これまでのあなたの貢献</h2>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <p className="text-orange-500 text-xl font-bold">12</p>
               <p className="text-sm text-gray-500">寄付回数</p>
-            </div>
-            <div>
-              <p className="text-orange-500 text-xl font-bold">35kg</p>
-              <p className="text-sm text-gray-500">フードロス<br/>削減量</p>
             </div>
             <div>
               <p className="text-orange-500 text-xl font-bold">18</p>
@@ -49,9 +43,25 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+
+        {/* 獲得バッジの表示 */}
+        <BadgeList />
+
+        {/* 次のチャレンジ */}
+        <div className="mt-6 p-4 border rounded-xl bg-green-50 text-left">
+          <div className="flex items-center justify-between mb-1">
+            <span className="font-semibold text-green-800">🌱 次のチャレンジ</span>
+          </div>
+          <p className="text-sm text-green-900 mb-2">環境の守護者：環境保護団体に3回寄付しよう</p>
+          <div className="w-full bg-green-200 h-2 rounded-full">
+            <div className="bg-green-600 h-2 rounded-full" style={{ width: "33%" }}></div>
+          </div>
+          <p className="text-xs text-green-800 mt-1">1/3 達成</p>
+        </div>
       </div>
 
-      <BottomNavigation activeTab={activeTab} />
+      <BottomNavigation activeTab={"home"} />
     </div>
   );
 } 
