@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "画像データが提供されていません" });
   }
 
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     console.error("APIキーが設定されていません");
     return res.status(500).json({ error: "APIキーが設定されていません" });

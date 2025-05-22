@@ -36,5 +36,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/b
 3. .envファイル以下のように編集
 
 ``
-NEXT_PUBLIC_GEMINI_API_KEY=<取得した自分のAPIキー>
+GEMINI_API_KEY=<取得した自分のAPIキー>
 ```

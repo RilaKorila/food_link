@@ -6,8 +6,8 @@ export default async function handler(req, res) {
       res.status(405).json({ error: "Method Not Allowed" })
       return
     }
-    const { prefecture, city, donationTarge, detectedFoods } = req.body
-    const genAIClient = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY })
+    const { prefecture, city, donationTarget, detectedFoods } = req.body
+    const genAIClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
 
     const prompt = `
       あなたはフードバンクの専門家です。
