@@ -28,7 +28,6 @@ export default function DonationInfo() {
     "生鮮食品・アルコール類は対象外",
     "食品は清潔な状態でお持ちください",
   ]
-  const necessaryFoodList = foodBank?.necessaryFoodList || []
 
   return (
     <div className="flex flex-col h-screen">

@@ -9,6 +9,7 @@ import ProcessingModal from '@/components/ProcessingModal';
 export default function FoodBankFinderPage() {
   const [location, setLocation] = useState("東京都新宿区")
   const [donationTarget, setDonationTarget] = useState("子ども支援")
+  const [photo, setPhoto] = useState(null)
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const router = useRouter()
@@ -41,6 +42,7 @@ export default function FoodBankFinderPage() {
       if (ctx) {
         ctx.drawImage(videoRef.current, 0, 0, 300, 225)
         const imageData = canvasRef.current.toDataURL("image/png")
+        setPhoto(imageData)
 
         // カメラ停止処理
         const stream = videoRef.current.srcObject
@@ -173,8 +175,27 @@ export default function FoodBankFinderPage() {
         <div>
           <div className="w-full flex justify-center mt-4">
             <div className="flex flex-col items-center space-y-4">
-              <video ref={videoRef} width={300} height={225} className="border rounded" />
-              <canvas ref={canvasRef} width={300} height={225} className="hidden" />
+            {!photo ? (
+              <video
+                ref={videoRef}
+                width={300}
+                height={225}
+                className="rounded border"
+                playsInline
+                autoPlay
+                muted
+              />
+            ) : (
+              <img
+                src={photo}
+                alt="撮影された画像"
+                width={300}
+                height={225}
+                className="rounded border"
+              />
+            )}
+
+            <canvas ref={canvasRef} width={300} height={225} className="hidden" />
 
               <button
                 onClick={handleDonationProcess}
