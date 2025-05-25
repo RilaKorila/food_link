@@ -30,7 +30,9 @@ export default function MatchFoodBank() {
           </div>
           <ul className="list-disc list-inside text-gray-700">
             {detectedFoods.map((food, index) => (
-              <li key={index}>{food}</li>
+              <li key={index}>
+                {typeof food === 'object' ? `${food.name} (${food.weight})` : food}
+              </li>
             ))}
           </ul>
         </div>
