@@ -17,6 +17,18 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "APIキーが設定されていません" });
   }
 
+  if(true){
+    //ダミーデータを返す
+    const dummyData = {
+      foods: [
+        {
+          "name": "食品1",
+          "weight": "1kg"
+        }
+      ]
+    }
+    return res.status(200).json(dummyData)
+  }
   try {
     console.log("Gemini APIの初期化を開始");
     const genAI = new GoogleGenerativeAI(apiKey);

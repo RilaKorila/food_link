@@ -34,6 +34,32 @@ export default async function handler(req, res) {
       ]
       `
 
+      if(true){
+        //ダミーデータを返す
+        const dummyData = [
+          {
+            "name": "フードバンク名",
+            "pref": "県名",
+            "city": "市町村名",
+            "target": "受け入れ対象",
+            "necessaryFoods": ["食品1", "食品2", "食品3"],
+            "cautionList": ["注意事項1", "注意事項2", "注意事項3"],
+            "donationMethod": "具体的な寄付方法の2-3行要約",
+            "url": "公式サイトURL"
+          },
+          {
+            "name": "フードバンク名 2",
+            "pref": "県名 2",
+            "city": "市町村名 2",
+            "target": "受け入れ対象 2",
+            "necessaryFoods": ["食品1 2", "食品2 2", "食品3 2"],
+            "cautionList": ["注意事項1 2", "注意事項2 2", "注意事項3 2"],
+            "donationMethod": "具体的な寄付方法の2-3行要約 2",
+            "url": "公式サイトURL 2"
+          }
+        ]
+        return res.status(200).json(dummyData)
+      }
       try {
         const result = await genAIClient.models.generateContent({
         model: "gemini-2.0-flash-001",
