@@ -1,7 +1,20 @@
+import { useState } from "react"
 import BottomNavigation from "@/components/BottomNavigation"
 import { ArrowLeft, MapPin, Heart, Plus, Crosshair, ZoomIn, ZoomOut, CookingPot, ArrowUpDown } from "lucide-react"
 
+function sortFoodBanksByDistance(foodBanks, order) {
+  // descが指定されたときは、distanceが大きい順
+  if (order === "desc") {
+    return foodBanks.sort((a, b) => b.distance - a.distance)
+  }
+  else {
+    // descが指定されたときは、distanceが小さい順
+    return foodBanks.sort((a, b) => a.distance - b.distance)
+  }
+}
+
 export default function NearbyFoodBanks() {
+  const [foodBankListOrder, setFoodBankListorder] = useState("desc")
   // 仮の位置データ（緯度経度）
   const markers = [
     { id: 1, name: "新宿フードバンク", lat: 35.708, lng: 139.710 },
@@ -13,22 +26,24 @@ export default function NearbyFoodBanks() {
     {
       name: "新宿フードバンク",
       address: "東京都新宿区高田馬場4-5-6",
-      distance: "1.2km",
+      distance: 1.2,
       tags: ["子ども支援", "高齢者支援"],
     },
     {
       name: "渋谷こども食堂",
       address: "東京都渋谷区神南1-2-3",
-      distance: "2.8km",
+      distance: 2.8,
       tags: ["子ども支援", "教育支援"],
     },
     {
       name: "渋谷こども食堂",
       address: "東京都渋谷区神南1-2-3",
-      distance: "2.8km",
+      distance: 2.8,
       tags: ["子ども支援", "教育支援"],
     },
   ]
+  const sortedFoodBanks = sortFoodBanksByDistance(foodBanks, foodBankListOrder)
+
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -37,7 +52,7 @@ export default function NearbyFoodBanks() {
         <button className="mr-3" onClick={() => window.history.back()}>
           <ArrowLeft size={24} />
         </button>
-        <h1 className="font-bold text-lg">近くのフードバンク</h1>
+        <h1 className="font-bold text-lg bg-orange">近くのフードバンク</h1>
       </div>
 
       {/* 絞り込み条件 */}
@@ -109,19 +124,19 @@ export default function NearbyFoodBanks() {
       <div className="bg-white rounded-t-3xl p-4 shadow-lg">
         <div className="flex justify-between items-center mb-2">
           <span className="font-semibold">検索結果 ({foodBanks.length}件)</span>
-          <div className="flex items-center space-x-2">
+          < button className="flex items-center space-x-2" onClick={() => setFoodBankListorder(foodBankListOrder === "desc" ? "asc" : "desc")}>
             <span className="text-sm text-gray-500">距離順</span>
             <ArrowUpDown size={20} className="text-gray-500 cursor-pointer" />
-          </div>
+          </ button>
         </div>
 
         {/* 各フードバンク項目 */}
         <div className="h-[150px] overflow-y-auto">
-          {foodBanks.map((item, idx) => (
+          {sortedFoodBanks.map((item, idx) => (
             <div key={idx} className="p-3 border rounded-lg mb-3 shadow-sm">
               <div className="flex justify-between items-center mb-1">
                 <span className="font-bold">{item.name}</span>
-                <span className="bg-orange-100 text-orange-600 text-xs font-semibold px-2 py-1 rounded-full">{item.distance}</span>
+                <span className="bg-orange-100 text-orange-600 text-xs font-semibold px-2 py-1 rounded-full">{item.distance}km</span>
               </div>
               <div className="text-sm text-gray-500 mb-1">{item.address}</div>
               <div className="flex flex-wrap gap-1">
@@ -136,7 +151,7 @@ export default function NearbyFoodBanks() {
         </div>
       </div>
 
-      <BottomNavigation activeTab="nearby" />
+      <BottomNavigation activeTab="map" />
     </div>
   )
 }
