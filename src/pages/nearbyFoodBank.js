@@ -1,7 +1,7 @@
 import { useState } from "react"
 import BottomNavigation from "@/components/BottomNavigation"
-import { ArrowLeft, MapPin, Heart, Plus, Crosshair, ZoomIn, ZoomOut, CookingPot, ArrowUpDown } from "lucide-react"
-
+import { ArrowLeft, Crosshair, ZoomIn, ZoomOut, CookingPot, ArrowUpDown } from "lucide-react"
+import FoodBankFilterButton from "@/components/FoodBankFilterButton"
 function sortFoodBanksByDistance(foodBanks, order) {
   // descが指定されたときは、distanceが大きい順
   if (order === "desc") {
@@ -15,6 +15,13 @@ function sortFoodBanksByDistance(foodBanks, order) {
 
 export default function NearbyFoodBanks() {
   const [foodBankListOrder, setFoodBankListorder] = useState("desc")
+  const [selectedFilters, setSelectedFilters] = useState({
+    distance: true, // 5km以内はデフォルトON
+    child: true, // 子ども支援
+    medical: false, // 医療支援
+    senior: false,
+    disaster: false,
+  });
   // 仮の位置データ（緯度経度）
   const markers = [
     { id: 1, name: "新宿フードバンク", lat: 35.708, lng: 139.710 },
@@ -44,6 +51,25 @@ export default function NearbyFoodBanks() {
   ]
   const sortedFoodBanks = sortFoodBanksByDistance(foodBanks, foodBankListOrder)
 
+  // 絞り込み条件 トグル処理
+  const toggleFilter = (filterKey) => {
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [filterKey]: !prev[filterKey],
+    }));
+  };
+
+  // 絞り込み条件 全解除処理
+  const clearFilters = () => {
+    setSelectedFilters({
+      distance: false,
+      child: false,
+      medical: false,
+      senior: false,
+      disaster: false,
+    });
+  };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -59,22 +85,40 @@ export default function NearbyFoodBanks() {
       <div className="bg-white px-4 py-3 shadow">
         <div className="flex justify-between items-center mb-2">
           <span className="font-semibold">絞り込み条件</span>
-          <button className="text-orange-500 text-sm">クリア</button>
+          <button className="text-orange-500 text-sm" onClick={clearFilters}>クリア</button>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <div className="flex items-center bg-orange-50 text-orange-500 px-3 py-1 rounded-full text-sm">
-            <MapPin size={16} className="mr-1" /> 5km以内
-          </div>
-          <div className="flex items-center bg-orange-50 text-orange-500 px-3 py-1 rounded-full text-sm">
-            <Heart size={16} className="mr-1" /> 子ども支援
-          </div>
-          <div className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">医療支援</div>
-          <div className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">高齢者支援</div>
-          <div className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">災害支援</div>
-          <div className="flex items-center bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">
-            その他 <Plus size={16} className="ml-1" />
-          </div>
+          <FoodBankFilterButton
+            selectedFilters={selectedFilters}
+            toggleFilter={toggleFilter}
+            filterKey="distance"
+            filterName="5km以内"
+          />
+          <FoodBankFilterButton
+            selectedFilters={selectedFilters}
+            toggleFilter={toggleFilter}
+            filterKey="child"
+            filterName="子ども支援"
+          />
+          <FoodBankFilterButton
+            selectedFilters={selectedFilters}
+            toggleFilter={toggleFilter}
+            filterKey="medical"
+            filterName="医療支援"
+          />
+          <FoodBankFilterButton
+            selectedFilters={selectedFilters}
+            toggleFilter={toggleFilter}
+            filterKey="senior"
+            filterName="高齢者支援"
+          />
+          <FoodBankFilterButton
+            selectedFilters={selectedFilters}
+            toggleFilter={toggleFilter}
+            filterKey="disaster"
+            filterName="災害支援"
+          />
         </div>
       </div>
 
