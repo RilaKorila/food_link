@@ -2,33 +2,37 @@ import { useEffect, useState } from "react"
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
 import { useRouter } from "next/navigation"
+import { Pencil, Trash2 } from "lucide-react"
 
 export default function MatchFoodBank() {
     const router = useRouter()
   const [detectedFoods, setDetectedFoods] = useState([])
   const [foodBanks, setFoodBanks] = useState([])
   const [editingIndex, setEditingIndex] = useState(null)
-  const [editWeight, setEditWeight] = useState("")
+  const [editName, setEditName] = useState("")
 
   useEffect(() => {
     const detectedFoods = sessionStorage.getItem("detectedFoods") 
     const recommendedFoodBanks = sessionStorage.getItem("recommendedFoodBanks")
 
-    if (detectedFoods) setDetectedFoods(JSON.parse(detectedFoods))
+    if (detectedFoods) {
+      // 食品名のみを保持するように変換
+      const foods = JSON.parse(detectedFoods).map(food => 
+        typeof food === 'object' ? food.name : food
+      )
+      setDetectedFoods(foods)
+    }
     if (recommendedFoodBanks) setFoodBanks(JSON.parse(recommendedFoodBanks))
   }, [])
 
   const handleEdit = (index, food) => {
     setEditingIndex(index)
-    setEditWeight(food.weight || "")
+    setEditName(food)
   }
 
   const handleSave = (index) => {
     const newFoods = [...detectedFoods]
-    newFoods[index] = {
-      ...newFoods[index],
-      weight: editWeight
-    }
+    newFoods[index] = editName
     setDetectedFoods(newFoods)
     sessionStorage.setItem("detectedFoods", JSON.stringify(newFoods))
     setEditingIndex(null)
@@ -36,7 +40,12 @@ export default function MatchFoodBank() {
 
   const handleCancel = () => {
     setEditingIndex(null)
-    setEditWeight("")
+    setEditName("")
+  }
+  const handleDelete = (index) => {
+    const newFoods = detectedFoods.filter((_, i) => i !== index)
+    setDetectedFoods(newFoods)
+    sessionStorage.setItem("detectedFoods", JSON.stringify(newFoods))
   }
 
   return (
@@ -51,24 +60,21 @@ export default function MatchFoodBank() {
           <div className="flex items-center justify-between mb-2">
             <span className="font-semibold text-orange-500">認識結果</span>
           </div>
-          <ul className="list-disc list-inside text-gray-700 space-y-2">
+          <ul className="list-disc list-inside text-gray-700 space-y-4">
             {detectedFoods.map((food, index) => (
-              <li key={index} className="flex items-center justify-between">
-                <div>
-                  {typeof food === 'object' ? food.name : food}
-                </div>
+              <li key={index} className="flex flex-col gap-2">
                 {editingIndex === index ? (
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
-                      value={editWeight}
-                      onChange={(e) => setEditWeight(e.target.value)}
-                      className="w-20 px-2 py-1 border rounded"
-                      placeholder="数量"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="flex-1 px-2 py-1 border rounded"
+                      placeholder="食品名"
                     />
                     <button
                       onClick={() => handleSave(index)}
-                      className="px-2 py-1 bg-green-500 text-white rounded text-sm"
+                      className="px-2 py-1 bg-orange-500 text-white rounded text-sm"
                     >
                       保存
                     </button>
@@ -80,16 +86,24 @@ export default function MatchFoodBank() {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">
-                      {food.weight ? `${food.weight}` : "数量未設定"}
-                    </span>
-                    <button
-                      onClick={() => handleEdit(index, food)}
-                      className="px-2 py-1 bg-orange-500 text-white rounded text-sm"
-                    >
-                      編集
-                    </button>
+                  <div className="flex items-center justify-between">
+                    <div className="font-medium">
+                      {food}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => handleEdit(index, food)}
+                        className="p-1.5 bg-white text-orange-500 rounded text-sm hover:bg-orange-500 hover:text-white transition-colors"
+                      >
+                        <Pencil size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(index)}
+                        className="p-1.5 bg-white text-red-500 rounded text-sm hover:bg-red-600 hover:text-white transition-colors"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
                 )}
               </li>
