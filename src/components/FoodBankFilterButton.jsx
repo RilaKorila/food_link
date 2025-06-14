@@ -2,7 +2,7 @@ export default function FoodBankFilterButton({ selectedFilters, toggleFilter, fi
     return (
         <button
             onClick={() => toggleFilter(filterKey)}
-            className={`flex items-center px-3 py-1 rounded-full text-sm 
+            className={`px-4 py-2 rounded-full text-sm whitespace-nowrap 
               ${selectedFilters[filterKey] ? "bg-orange-50 text-orange-500" : "bg-gray-100 text-gray-500"}`}>
             {filterName}
         </button>
