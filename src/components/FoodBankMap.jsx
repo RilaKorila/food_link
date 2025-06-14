@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { useState } from "react"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
+import FoodBankMapPopup from "@/components/FoodBankMapPopup";
 
 export default function FoodBankMap({ markers }) {
   // クリックされたマーカーを保持
@@ -39,32 +40,25 @@ export default function FoodBankMap({ markers }) {
         attribution="&copy; OpenStreetMap contributors"
       />
 
-      {markers.map((m) => (
+      {markers.map((marker) => (
         <Marker
-          key={m.id}
-          position={[m.lat, m.lng]}
+          key={marker.id}
+          position={[marker.pos.latitude, marker.pos.longitude]}
           icon={createCustomIcon()}
 
           // クリック時に state に保持
           eventHandlers={{
-            click: () => setActiveMarker(m),
+            click: () => setActiveMarker(marker),
           }}
         >
           {/* クリックされたマーカーだけ Popup を表示 */}
-          {activeMarker?.id === m.id && (
+          {activeMarker?.id === marker.id && (
             <Popup
-              position={[m.lat, m.lng]}
-              onClose={() => setActiveMarker(null)}
-              closeButton={false}
+                position={[marker.pos.latitude, marker.pos.longitude]}
+                onClose={() => setActiveMarker(null)}
+                closeButton={false}
             >
-              <div className="space-y-1">
-                <h3 className="font-semibold text-base">{m.name}</h3>
-                {/* <ul className="text-sm text-gray-600 leading-tight">
-                  {m.tags.map((tag) => (
-                    <li key={tag}>• {tag}</li>
-                  ))}
-                </ul> */}
-              </div>
+                <FoodBankMapPopup marker={marker} />
             </Popup>
           )}
         </Marker>
