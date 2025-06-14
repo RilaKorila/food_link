@@ -36,6 +36,7 @@ export default function BottomNavigation({ activeTab }) {
         </button>
 
         <button
+          onClick={() => navigateTo("/nearbyFoodBank")}
           className={getButtonClass("map")}
         >
           <MapPin size={iconSize} />

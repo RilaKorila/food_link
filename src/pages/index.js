@@ -1,9 +1,11 @@
-import { Camera, RotateCcw } from "lucide-react";
+import { Camera, MapPinned, RotateCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import BottomNavigation from "@/components/BottomNavigation";
 import BadgeList from "@/components/BadgeList";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
@@ -13,17 +15,23 @@ export default function Home() {
       <div className="flex-1 overflow-y-auto px-4 py-6 bg-white space-y-6">
 
         <div className="text-center">
-          <h2 className="font-semibold text-gray-700 mb-2">クイックアクション</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-orange-50 p-4 rounded-xl flex flex-col items-center text-center">
+          <div className="grid grid-cols-3 gap-4">
+            <button className="bg-orange-50 p-4 rounded-xl flex flex-col items-center text-center"
+              onClick={() => router.push("/page")}>
               <Camera className="text-orange-500 mb-2" />
-              <span className="text-sm font-semibold">食品を撮影して寄付</span>
-            </div>
+              <span className="text-sm font-semibold">撮影</span>
+            </button>
 
-            <div className="bg-orange-50 p-4 rounded-xl flex flex-col items-center text-center">
+            <button className="bg-orange-50 p-4 rounded-xl flex flex-col items-center text-center"
+              onClick={() => router.push("/nearbyFoodBank")}>
+              <MapPinned className="text-orange-500 mb-2" />
+              <span className="text-sm font-semibold">近くの寄付</span>
+            </button>
+
+            <button className="bg-orange-50 p-4 rounded-xl flex flex-col items-center text-center">
               <RotateCcw className="text-orange-500 mb-2" />
               <span className="text-sm font-semibold">寄付履歴</span>
-            </div>
+            </button>
           </div>
         </div>
 
