@@ -7,7 +7,6 @@ export default function FoodBankMap({ markers }) {
   // クリックされたマーカーを保持
   const [activeMarker, setActiveMarker] = useState(null)
 
-  // カスタムアイコン（お好みで）
   const createCustomIcon = () =>
     new L.DivIcon({
       html: `<div style="
@@ -15,8 +14,15 @@ export default function FoodBankMap({ markers }) {
         border-radius:50%;
         width:32px;height:32px;
         display:flex;align-items:center;justify-content:center;
-        color:#fff;font-size:16px;font-weight:bold;
-      ">🍲</div>`,
+        color:#fff;font-size:20px;font-weight:bold;
+      ">
+        <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-package' viewBox='0 0 24 24'>
+          <path d='M16.5 9.4 7.55 4.24'/>
+          <path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z'/>
+          <path d='M3.3 7L12 12.4l8.7-5.4'/>
+          <path d='M12 22V12.4'/>
+        </svg>
+      </div>`,
       className: "",
       iconSize: [32, 32],
       iconAnchor: [16, 32], // 先端が座標に合うよう調整
@@ -53,11 +59,11 @@ export default function FoodBankMap({ markers }) {
             >
               <div className="space-y-1">
                 <h3 className="font-semibold text-base">{m.name}</h3>
-                <ul className="text-sm text-gray-600 leading-tight">
+                {/* <ul className="text-sm text-gray-600 leading-tight">
                   {m.tags.map((tag) => (
                     <li key={tag}>• {tag}</li>
                   ))}
-                </ul>
+                </ul> */}
               </div>
             </Popup>
           )}

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import BottomNavigation from "@/components/BottomNavigation"
 import dynamic from "next/dynamic"
 import FoodBankFilterButton from "@/components/FoodBankFilterButton"
@@ -14,12 +14,14 @@ export default function NearbyFoodBanks() {
     senior: false,
     disaster: false,
   })
-  // 仮の位置データ（緯度経度）
-  const markers = [
-    { id: 1, name: "新宿フードバンク", lat: 35.708, lng: 139.710, tags: ["子ども支援", "高齢者支援"] },
-    { id: 2, name: "渋谷こども食堂", lat: 35.660, lng: 139.699 , tags: ["子ども支援", "教育支援"] },
-    { id: 3, name: "池袋フードサポート", lat: 35.730, lng: 139.717, tags: ["子ども支援", "高齢者支援"] },
-  ]
+  const [markers, setMarkers] = useState([])
+
+  useEffect(() => {
+    fetch('/api/foodbanks')
+      .then(res => res.json())
+      .then(data => setMarkers(data.markers || []))
+      .catch(console.error)
+  }, [])
 
   // 絞り込み条件 トグル処理
   const toggleFilter = (filterKey) => {
