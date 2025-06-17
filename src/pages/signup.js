@@ -7,8 +7,7 @@ export default function SignUpPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  const [lastName, setLastName] = useState('')
-  const [firstName, setFirstName] = useState('')
+  const [nickname, setNickname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
@@ -28,8 +27,7 @@ export default function SignUpPage() {
       password,
       options: {
         data: {
-          first_name: firstName,
-          last_name: lastName,
+          nickname: nickname,
         },
       },
     })
@@ -56,21 +54,11 @@ export default function SignUpPage() {
         {/* 名前 */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-1 block">姓</label>
+            <label className="text-sm font-semibold text-gray-700 mb-1 block">ニックネーム</label>
             <input
               type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="おに"
-              className="w-full px-4 py-2 border rounded-lg text-sm"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-semibold text-gray-700 mb-1 block">名</label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
               placeholder="おにぎり"
               className="w-full px-4 py-2 border rounded-lg text-sm"
             />
