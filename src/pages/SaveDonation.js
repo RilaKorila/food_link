@@ -1,25 +1,34 @@
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/router"
+import useSWR from 'swr'
+import { createClient } from '@/utils/supabase/server-props'
 import Image from "next/image"
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
-import { ArrowLeft, Camera, CheckCircle } from "lucide-react"
+import { Camera, CheckCircle } from "lucide-react"
+import { saveDonationPost } from '@/repository/donationPost'
 
-export default function SaveDonation() {
+const fetcher = (url) => fetch(url).then((res) => res.json())
+
+export default function SaveDonation({ user }) {
   const router = useRouter()
+  const { data, error } = useSWR(user.id ? `/api/member?user_id=${user.id}` : null, fetcher)
+  const foodBankOptions = ["新宿フードバンク", "渋谷子ども食堂", "その他"] // TODO seessionStorage から取得する
+
 
   /* -------------------------------------------------
    *  state
    * ------------------------------------------------- */
-  const [foodBank, setFoodBank]       = useState(null)
+  const [foodBank, setFoodBank] = useState(null)
   const [donatedFoods, setDonatedFoods] = useState([])
-  const [user, setUser] = useState(null)
-  const [imgFile, setImgFile]         = useState(null)
-  const [imgPreview, setImgPreview]   = useState("")
+  const [imgFile, setImgFile] = useState(null)
+  const [imgPreview, setImgPreview] = useState("")
   const [message, setMessage]         = useState("")
   const [isPublic, setIsPublic]       = useState(true)
   const [isSaved, setIsSaved]         = useState(false)
   const fileInputRef                  = useRef(null)
+  const [selectedFoodBank, setSelectedFoodBank] = useState("")
+  const [customFoodBank, setCustomFoodBank] = useState("")
 
   const ICON_SIZE = 24
 
@@ -27,20 +36,16 @@ export default function SaveDonation() {
    *  初期データ読み込み
    * ------------------------------------------------- */
   useEffect(() => {
-    const fb  = sessionStorage.getItem("selectedFoodBank")
     const dfs = sessionStorage.getItem("detectedFoods")
-    if (fb)  setFoodBank(JSON.parse(fb))
-    if (dfs) setDonatedFoods(JSON.parse(dfs))
+    if (dfs) {
+      const foods = JSON.parse(dfs)
+      setDonatedFoods(Array.isArray(foods) ? foods : [])
+    }
 
     // TODO 
     const donatedFoods = ["食品1", "食品2", "食品3"] // ダミーデータ
     setDonatedFoods(donatedFoods)
 
-    // TODO 
-    const loginedUser = {
-        name: "おむすび",
-    }
-    setUser(loginedUser)
   }, [])
 
   /* -------------------------------------------------
@@ -59,18 +64,27 @@ export default function SaveDonation() {
    *  寄付記録保存 & SNS 共有
    * ------------------------------------------------- */
   const handleSave = async () => {
-    // TODO: API 呼び出しで寄付データを保存
-    // 例）await saveDonation({ foodBank, donatedFoods, imgFile, message, isPublic })
+    if (!user) return;
 
-    setIsSaved(true)
-    setTimeout(() => router.push("/myProfile"), 1500)
+    try {
+      await saveDonationPost({
+        memberId: user.id,
+        content: message,
+        recipient: selectedFoodBank !== "その他" ? selectedFoodBank : customFoodBank,
+        isPublic: isPublic,
+      })
+      setIsSaved(true)
+      setTimeout(() => router.push("/timeline"), 1500)
+    } catch (e) {
+      console.log('保存に失敗しました: ' + e.message)
+    }
   }
 
   const shareX = () => {
     const text = encodeURIComponent(
-      `${foodBank?.name ?? ""} に食品を寄付しました！ #フードバンク #FoodLink \n${message}`
+      `${selectedFoodBank != "その他" ? selectedFoodBank: customFoodBank} に食品を寄付しました！ #フードバンク #FoodLink \n${message}`
     )
-    const url  = encodeURIComponent(window.location.origin) // プロダクション URL に合わせて
+    const url  = encodeURIComponent(window.location.origin)
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank")
   }
 
@@ -95,22 +109,25 @@ export default function SaveDonation() {
       <Header />
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         <div className="flex items-center">
-          <button onClick={() => router.back()}>
-            <ArrowLeft className="text-orange-500" />
-          </button>
-          <h1 className="text-lg font-bold text-gray-800">寄付を報告</h1>
+          <h1 className="text-lg font-bold text-gray-800">寄付をシェア</h1>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center font-bold text-orange-600">
-            🍙
-          </div>
-          <div className="flex-1">
-            <p className="font-bold">{ user.name }</p>
-            {foodBank && (
-              <p className="text-xs text-gray-500">{foodBank.name} に寄付</p>
-            )}
-          </div>
+        <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+            寄付先を選択
+            </label>
+            <select
+            value={selectedFoodBank}
+            onChange={(e) => setSelectedFoodBank(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+s            <option value="">選択してください</option>
+            {foodBankOptions.map((option) => (
+                <option key={option} value={option}>
+                {option}
+                </option>
+            ))}
+            </select>
         </div>
 
         <section>
@@ -148,23 +165,6 @@ export default function SaveDonation() {
             />
           </div>
         </section>
-
-        {/* 寄付内容 */}
-        {donatedFoods.length > 1 && (
-          <section>
-            <h2 className="font-bold text-gray-800 mb-2">寄付内容</h2>
-            <div className="bg-orange-50 rounded-xl p-4">
-              <p className="font-bold text-orange-700 mb-2">寄付した食品</p>
-              <ul className="space-y-1 text-sm">
-                {donatedFoods.map((food, i) => (
-                  <li key={i} className="flex justify-between">
-                    <span>{food}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
 
         {/* フードバンク情報 */}
         {foodBank && (
@@ -264,4 +264,28 @@ export default function SaveDonation() {
       <BottomNavigation activeTab="save" />
     </div>
   )
+}
+
+export async function getServerSideProps(context) {
+  const supabase = createClient(context)
+  const { data, error } = await supabase.auth.getUser()
+
+  if (error || !data) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          nickname: data.user.user_metadata.first_name
+      }
+    },
+  }
 }
