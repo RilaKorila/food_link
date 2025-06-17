@@ -21,6 +21,5 @@ export async function fetchMemberProfile(userId) {
     .single()
   if (error) throw error
 
-  console.log("data: ", data)
   return toMember(data)
 }

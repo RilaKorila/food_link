@@ -36,23 +36,18 @@ export default function DonationPostCard({ post }) {
             {post.user.icon}
           </div>
           <div>
-            <p className="font-bold text-sm">{post.user.name}</p>
-            <p className="text-xs text-gray-500">{post.user.location} に寄付</p>
+            <p className="font-bold text-sm">{post.user.nickname}</p>
+            <p className="text-xs text-gray-500">{post.recipient} に寄付</p>
           </div>
         </div>
         <p className="text-xs text-gray-500">{postedAt}</p>
       </div>
 
-      <p className="text-sm text-gray-800 whitespace-pre-wrap">{post.message}</p>
+      <p className="text-sm text-gray-800 whitespace-pre-wrap">{post.content}</p>
 
-      {post.image && (
+      {post.images.length > 0 && (
         <div className="rounded-xl overflow-hidden bg-gray-100">
-          <img src={post.image} alt="donation" className="w-full object-cover" />
-        </div>
-      )}
-      {!post.image && (
-        <div className="rounded-xl h-40 bg-gray-100 flex items-center justify-center text-gray-400">
-          <span className="text-sm">📷</span>
+          <img src={post.images[0]} alt="donation" className="w-full object-cover" />
         </div>
       )}
 

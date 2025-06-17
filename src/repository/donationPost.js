@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { toDonationPostResponses } from '@/model/donationPostResponse'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -33,4 +34,33 @@ export async function saveDonationPost({ memberId, content, recipient, isPublic:
 
     if (error) throw error
     return data
+}
+
+/**
+ * 寄付投稿を全て取得する
+ * @returns {Promise<Object>} 寄付投稿データ
+ */
+export async function fetchDonationPost() {
+    const { data, error } = await supabase
+        .from('donation')
+        .select(`
+            id,
+            member_id,
+            content,
+            recipient_id,
+            is_public,
+            created_at,
+            updated_at,
+            member_profile:member_id (nickname)
+        `)
+        .eq('is_public', true) // 公開されている投稿のみ取得
+
+    if (error) throw error
+    // member_profileがネストされて返るので、nicknameを展開して渡す
+    return toDonationPostResponses(
+      data.map(row => ({
+        ...row,
+        nickname: row.member_profile?.nickname || '',
+      }))
+    )
 }
