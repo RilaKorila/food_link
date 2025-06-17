@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/router"
 import useSWR from 'swr'
 import { createClient } from '@/utils/supabase/server-props'
-import Image from "next/image"
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
 import { Camera, CheckCircle } from "lucide-react"
@@ -74,30 +73,16 @@ export default function SaveDonation({ user }) {
         isPublic: isPublic,
       })
       setIsSaved(true)
-      setTimeout(() => router.push("/timeline"), 1500)
+
+      sessionStorage.setItem("donationSelectedFoodBank", selectedFoodBank)
+      sessionStorage.setItem("donationMessage", message)
+
+      setTimeout(() => {router.push("/doneDonation")}, 1500)
     } catch (e) {
       console.log('保存に失敗しました: ' + e.message)
     }
   }
 
-  const shareX = () => {
-    const text = encodeURIComponent(
-      `${selectedFoodBank != "その他" ? selectedFoodBank: customFoodBank} に食品を寄付しました！ #フードバンク #FoodLink \n${message}`
-    )
-    const url  = encodeURIComponent(window.location.origin)
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank")
-  }
-
-  const shareFacebook = () => {
-    const url  = encodeURIComponent(window.location.origin)
-    const text = encodeURIComponent(
-      `${foodBank?.name ?? ""} に食品を寄付しました！ ${message}`
-    )
-    window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`,
-      "_blank"
-    )
-  }
 
 
   if (!user) {
@@ -227,24 +212,6 @@ s            <option value="">選択してください</option>
           </div>
         </section>
 
-        {/* SNS 共有 */}
-        <section>
-          <h2 className="font-bold text-gray-800 mb-2">SNSでシェア</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <button
-              onClick={shareX}
-              className="flex items-center justify-center space-x-2 bg-black text-white rounded-xl py-3"
-            >
-              <Image src="/x-logo.svg" alt="X-logo" width={ICON_SIZE} height={ICON_SIZE} />
-            </button>
-            <button
-              onClick={shareFacebook}
-              className="flex items-center justify-center space-x-2 bg-[#0866FF] text-white rounded-xl py-3"
-            >
-              <Image src="/facebook-logo.png" alt="Facebook-logo" width={ICON_SIZE} height={ICON_SIZE} />
-            </button>
-          </div>
-        </section>
 
         <button
           className="w-full bg-orange-500 text-white font-bold py-3 rounded-xl hover:bg-orange-600 disabled:opacity-60"
