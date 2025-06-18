@@ -56,9 +56,36 @@ export async function fetchDonationPost() {
         .eq('is_public', true) // 公開されている投稿のみ取得
 
     if (error) throw error
+
+
+    // TODO ダミーデータを削除する
+    const samplePost = [{
+        id: 1,
+        member_id: 'sample_user',
+        content: 'そうめんがお家にたくさん余っていたので、今日は買い物のついでに、フードバンク目黒に寄付してきました！',
+        recipient_id: 1,
+        is_public: true,
+        created_at: "2025-05-24T00:00:00Z",
+        updated_at: "2025-05-24T00:00:00Z",
+        member_profile: { nickname: 'りん' }
+    },
+    {
+        id: 2,
+        member_id: 'sample_user2',
+        content: 'イベントの懇親会用に用意したお菓子がたくさん余ってしまったので、寄付します！このお菓子好きなので、おいしいと思ってくれるといいな',
+        recipient_id: 1,
+        is_public: true,
+        created_at: "2025-06-10T00:00:00Z",
+        updated_at: "2025-05-10T00:00:00Z",
+        member_profile: { nickname: 'もも' }
+    }]
+
+    // samplePostとdataをマージして返す
+    const posts = [...data, ...samplePost]
+
     // member_profileがネストされて返るので、nicknameを展開して渡す
     return toDonationPostResponses(
-      data.map(row => ({
+      posts.map(row => ({
         ...row,
         nickname: row.member_profile?.nickname || '',
       }))
