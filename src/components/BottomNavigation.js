@@ -29,13 +29,6 @@ export default function BottomNavigation({ activeTab }) {
         </button>
 
         <button
-          onClick={() => navigateTo("/page")}
-          className={getButtonClass("camera")}
-        >
-          <Camera size={iconSize} />
-        </button>
-
-        <button
           onClick={() => navigateTo("/nearbyFoodBank")}
           className={getButtonClass("map")}
         >
@@ -43,7 +36,14 @@ export default function BottomNavigation({ activeTab }) {
         </button>
 
         <button
-          onClick={() => navigateTo("/SaveDonation")}
+          onClick={() => navigateTo("/page")}
+          className={getButtonClass("camera")}
+        >
+          <Camera size={iconSize} />
+        </button>
+
+        <button
+          onClick={() => navigateTo("/selectDonationCandidate")}
           className={getButtonClass("save")}
         >
           <Save size={iconSize} />
