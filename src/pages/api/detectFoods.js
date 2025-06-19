@@ -40,6 +40,11 @@ export default async function handler(req, res) {
           - 食品名1
           - 食品名2
           - 食品名3
+
+          例：
+          - お米
+          - 缶詰
+          - 乾麺
         `,
       },
     ]);

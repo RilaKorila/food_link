@@ -12,16 +12,15 @@ export default function BottomNavigation({ activeTab }) {
   }
 
   const getButtonClass = (tab) => {
-    const isActive = activeTab === tab
-    return `flex items-center justify-center w-12 h-12 rounded-full transition-colors duration-200 ${
-      isActive ? "bg-orange-400 text-black" : "bg-transparent text-gray-400"
-    }`
+    if (tab === "camera") return "flex items-center justify-center w-14 h-14 rounded-full bg-orange-500 text-white shadow-lg border-4 border-white -mt-4 z-10";
+    if (activeTab === tab && tab !== "camera") return "flex items-center justify-center w-12 h-12 rounded-full text-orange-500 bg-white";
+    return "flex items-center justify-center w-12 h-12 rounded-full text-gray-400 bg-white";
   }
 
   return (
-    <footer className="w-full h-16 bg-white shadow-md">
-      <div className="flex justify-around items-center h-16">
-      <button
+    <footer className="w-full h-20 bg-white shadow-md">
+      <div className="flex justify-around items-center h-20">
+        <button
           onClick={() => navigateTo("/")}
           className={getButtonClass("home")}
         >
@@ -38,6 +37,7 @@ export default function BottomNavigation({ activeTab }) {
         <button
           onClick={() => navigateTo("/page")}
           className={getButtonClass("camera")}
+          style={{ position: 'relative', top: '-6px' }}
         >
           <Camera size={iconSize} />
         </button>
