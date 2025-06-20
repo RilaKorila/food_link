@@ -78,7 +78,7 @@ export default function SaveDonation({ user }) {
       console.log('保存に失敗しました: ' + e.message)
     }
   }
-
+  console.log("selectedFoodBank", selectedFoodBank)
 
 
   if (!user) {
@@ -90,26 +90,25 @@ export default function SaveDonation({ user }) {
       <Header />
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         <div className="flex items-center">
-          <h1 className="text-lg font-bold text-gray-800">寄付をシェア</h1>
+          <h1 className="text-lg font-bold text-gray-800">寄付記録をシェア</h1>
         </div>
 
         {/* フードバンク情報 */}
-        {foodBank && (
-          <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-start space-x-3">
-            <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+        {selectedFoodBank && (
+            <>
+            <h2 className="font-bold text-gray-800 mb-0">寄付内容</h2>
+          <div className="bg-white p-2 flex space-x-3 items-center mb-0">
+            <div className="w-10 h-10 flex items-center justify-center">
               📦
             </div>
-            <div className="flex-1 text-sm">
-              <p className="font-bold">{foodBank.name}</p>
-              <p className="text-gray-600">{foodBank.address}</p>
-            </div>
+              <p className="font-bold text-gray-800">{selectedFoodBank}</p>
           </div>
+          </>
         )}
 
         {/* 寄付内容 */}
-        {donatedFoods.length > 1 && (
+        {donatedFoods.length > 0 && (
           <section>
-            <h2 className="font-bold text-gray-800 mb-2">寄付内容</h2>
             <div className="bg-orange-50 rounded-xl p-4">
               <p className="font-bold text-orange-700 mb-2">寄付した食品</p>
               <ul className="space-y-1 text-sm">

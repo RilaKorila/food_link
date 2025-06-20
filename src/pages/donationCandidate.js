@@ -5,17 +5,10 @@ import { useRouter } from "next/router"
 const dummyDonations = [
   {
     id: 1,
-    date: "2024年1月15日",
-    items: ["お米", "缶詰（ツナ）", "パスタ"],
-    foodbank: { name: "新宿フードバンク", address: "東京都新宿区" },
-    image: null, // 実際はURLを指定
-  },
-  {
-    id: 2,
-    date: "2024年1月12日",
-    items: ["野菜ジュース", "レトルトカレー", "お菓子詰め合わせ"],
-    foodbank: { name: "渋谷こども食堂", address: "東京都渋谷区" },
-    image: null,
+    date: "2025年6月10日",
+    items: ["オートミール"],
+    foodbank: { name: "NPO法人フードバンク新宿", address: "東京都新宿区" },
+    image: "/meal_photo.png", // 実際はURLを指定
   },
 ]
 
@@ -37,13 +30,13 @@ export default function ReportDonationList() {
           key={donation.id}
           className="bg-white rounded-xl shadow-sm p-4 mb-6"
         >
-          <div className="bg-gray-100 rounded-lg h-36 flex items-center justify-center mb-4">
+          <div className="rounded-lg h-36 flex items-center justify-center mb-4">
             {/* 仮画像 */}
             <Image
-              src="/placeholder-box.svg"
+              src={donation.image}
               alt="寄付食品の写真"
-              width={48}
-              height={48}
+              width={100}
+              height={200}
             />
           </div>
 

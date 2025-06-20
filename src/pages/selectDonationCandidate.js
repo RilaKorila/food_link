@@ -16,7 +16,7 @@ export default function SaveDonation({ user }) {
       <Header />
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         <div className="flex items-center">
-          <h1 className="text-lg font-bold text-gray-800">寄付をシェア</h1>
+          <h1 className="text-lg font-bold text-gray-800">寄付記録をシェア</h1>
         </div>
 
         <button onClick={() => router.push("/donationCandidate")}
