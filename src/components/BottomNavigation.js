@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { Home, Camera, MapPin } from "lucide-react"
+import { Home, Camera, MapPin, Save, HeartHandshake } from "lucide-react"
 
 export default function BottomNavigation({ activeTab }) {
   const router = useRouter()
@@ -40,6 +40,20 @@ export default function BottomNavigation({ activeTab }) {
           className={getButtonClass("map")}
         >
           <MapPin size={iconSize} />
+        </button>
+
+        <button
+          onClick={() => navigateTo("/SaveDonation")}
+          className={getButtonClass("save")}
+        >
+          <Save size={iconSize} />
+        </button>
+
+        <button
+          onClick={() => navigateTo("/timeline")}
+          className={getButtonClass("timeline")}
+        >
+          <HeartHandshake size={iconSize} />
         </button>
       </div>
     </footer>

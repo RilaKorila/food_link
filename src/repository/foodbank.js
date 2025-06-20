@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@/utils/supabase/static-props'
 import { toFoodbankMarkers } from '@/model/foodbank'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL

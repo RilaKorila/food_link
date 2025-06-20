@@ -15,6 +15,8 @@ return (
                 width={32}
                 height={32}
                 className="object-cover"
+                onClick={() => window.location.href = '/myProfile'}
+                style={{ cursor: 'pointer' }}
             />
         </div>
     </div>
