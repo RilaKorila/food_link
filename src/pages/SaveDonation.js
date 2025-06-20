@@ -1,23 +1,18 @@
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/router"
-import useSWR from 'swr'
 import { createClient } from '@/utils/supabase/server-props'
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
-import { Camera, CheckCircle } from "lucide-react"
+import { CheckCircle } from "lucide-react"
 import { saveDonationPost } from '@/repository/donationPost'
-
-const fetcher = (url) => fetch(url).then((res) => res.json())
 
 export default function SaveDonation({ user }) {
   const router = useRouter()
-  const { data, error } = useSWR(user.id ? `/api/member?user_id=${user.id}` : null, fetcher)
 
 
   /* -------------------------------------------------
    *  state
    * ------------------------------------------------- */
-  const [foodBank, setFoodBank] = useState(null)
   const [donatedFoods, setDonatedFoods] = useState([])
   const [imgFile, setImgFile] = useState(null)
   const [imgPreview, setImgPreview] = useState("")
@@ -27,7 +22,6 @@ export default function SaveDonation({ user }) {
   const fileInputRef                  = useRef(null)
   const [selectedFoodBank, setSelectedFoodBank] = useState("")
 
-  const ICON_SIZE = 24
 
   /* -------------------------------------------------
    *  初期データ読み込み
@@ -78,7 +72,6 @@ export default function SaveDonation({ user }) {
       console.log('保存に失敗しました: ' + e.message)
     }
   }
-  console.log("selectedFoodBank", selectedFoodBank)
 
 
   if (!user) {

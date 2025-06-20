@@ -55,6 +55,20 @@ export default function BottomNavigation({ activeTab }) {
         >
           <HeartHandshake size={iconSize} />
         </button>
+
+        <button
+          onClick={() => navigateTo("/SaveDonation")}
+          className={getButtonClass("save")}
+        >
+          <Save size={iconSize} />
+        </button>
+
+        <button
+          onClick={() => navigateTo("/timeline")}
+          className={getButtonClass("timeline")}
+        >
+          <HeartHandshake size={iconSize} />
+        </button>
       </div>
     </footer>
   )
