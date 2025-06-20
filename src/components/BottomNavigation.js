@@ -12,7 +12,7 @@ export default function BottomNavigation({ activeTab }) {
   }
 
   const getButtonClass = (tab) => {
-    if (tab === "camera") return "flex items-center justify-center w-14 h-14 rounded-full bg-orange-500 text-white shadow-lg border-4 border-white -mt-4 z-10";
+    if (tab === "camera") return "flex items-center justify-center w-14 h-14 rounded-full bg-orange-500 text-white shadow-lg border-1 border-white z-10";
     if (activeTab === tab && tab !== "camera") return "flex items-center justify-center w-12 h-12 rounded-full text-orange-500 bg-white";
     return "flex items-center justify-center w-12 h-12 rounded-full text-gray-400 bg-white";
   }
@@ -28,6 +28,13 @@ export default function BottomNavigation({ activeTab }) {
         </button>
 
         <button
+          onClick={() => navigateTo("/nearbyFoodBank")}
+          className={getButtonClass("map")}
+        >
+          <MapPin size={iconSize} />
+        </button>
+
+        <button
           onClick={() => navigateTo("/page")}
           className={getButtonClass("camera")}
           style={{ position: 'relative', top: '-6px' }}
@@ -36,14 +43,7 @@ export default function BottomNavigation({ activeTab }) {
         </button>
 
         <button
-          onClick={() => navigateTo("/nearbyFoodBank")}
-          className={getButtonClass("map")}
-        >
-          <MapPin size={iconSize} />
-        </button>
-
-        <button
-          onClick={() => navigateTo("/SaveDonation")}
+          onClick={() => navigateTo("/selectDonationCandidate")}
           className={getButtonClass("save")}
         >
           <Save size={iconSize} />

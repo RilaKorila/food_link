@@ -8,6 +8,7 @@ const FoodBankMap = dynamic(() => import('@/components/FoodBankMap'), { ssr: fal
 
 export default function NearbyFoodBanks() {
   const [selectedFilters, setSelectedFilters] = useState({
+    point: true,
     distance: true, // 5km以内はデフォルトON
     child: true, // 子ども支援
     medical: false, // 医療支援
@@ -55,6 +56,7 @@ export default function NearbyFoodBanks() {
 
           <div className="flex overflow-x-auto space-x-2">
               <FoodBankFilterButton selectedFilters={selectedFilters} toggleFilter={toggleFilter} filterKey="distance" filterName="5km以内" />
+              <FoodBankFilterButton selectedFilters={selectedFilters} toggleFilter={toggleFilter} filterKey="point" filterName="ポイント取得可" />
               <FoodBankFilterButton selectedFilters={selectedFilters} toggleFilter={toggleFilter} filterKey="child" filterName="子ども支援" />
               <FoodBankFilterButton selectedFilters={selectedFilters} toggleFilter={toggleFilter} filterKey="medical" filterName="医療支援" />
               <FoodBankFilterButton selectedFilters={selectedFilters} toggleFilter={toggleFilter} filterKey="senior" filterName="高齢者支援" />

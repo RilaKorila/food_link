@@ -21,12 +21,18 @@
  * @returns {DonationPostResponse} DonationPostResponseオブジェクト
  */
 export function toDonationPostResponse(row) {
+    const iconMap = new Map()
+    iconMap.set('りん', '🍎') 
+    iconMap.set('もも', '🍑')
+    iconMap.set('onigiri', '🍙')
+
+    console.log('toDonationPostResponse', row);
 
   return {
     id: row.id,
     user: {
       id: row.member_id || row.user_id || '',
-      icon: '🍙',
+      icon: iconMap.get(row.nickname) || '🍚',
       nickname: row.nickname || '',
     },
     content: row.content || '',

@@ -10,11 +10,16 @@ export default function TimelinePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchDonationPost()
-      .then(setdonationPosts)
-      .catch((e) => console.log(e.message)) // TODO エラーハンドリングを改善する
-      .finally(() => setLoading(false))
-  }, [])
+  fetchDonationPost()
+    .then((posts) => {
+      const sorted = posts.sort((a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
+      setdonationPosts(sorted)
+    })
+    .catch((e) => console.log(e.message))
+    .finally(() => setLoading(false))
+}, [])
 
   if (loading) return <div className="p-4">読み込み中...</div>
 

@@ -83,7 +83,7 @@ export default function DonationInfo() {
         {/* 記録ボタン */}
         <button className="w-full bg-orange-500 text-white font-bold py-3 rounded-xl hover:bg-orange-600"
         onClick={() => {router.push("/")}}>
-          寄付を記録する
+          寄付候補として保存
         </button>
       </div>
 
